@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: campuspulse-backend
+  namespace: campuspulse
+  labels:
+    app: campuspulse-backend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+      name: http
+  selector:
+    app: campuspulse-backend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: campuspulse-frontend
+  namespace: campuspulse
+  labels:
+    app: campuspulse-frontend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+      name: http
+  selector:
+    app: campuspulse-frontend

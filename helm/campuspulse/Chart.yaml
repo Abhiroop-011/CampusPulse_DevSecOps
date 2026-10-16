@@ -1,0 +1,9 @@
+apiVersion: v2
+name: campuspulse
+description: Helm chart for CampusPulse Campus Events and Club Management Platform
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+maintainers:
+  - name: Abhiroop
+    email: abhiroop@campuspulse.internal

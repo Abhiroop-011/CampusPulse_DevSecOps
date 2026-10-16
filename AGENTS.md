@@ -7,7 +7,7 @@
 - **GitHub Repository:** `https://github.com/Abhiroop-011/CampusPulse_DevSecOps.git`
 - **Reference Repository:** `c:\Users\Abhiroop\Downloads\devsecops-python-main\devsecops-python-main` (Read-only reference)
 - **Submission Deadline:** Sunday, 19 October 2026, 11:59 PM IST (Late penalty: -5 pts / 24h)
-- **Current Status:** Phase 6 COMPLETE (CI/CD + Trivy Security Scan + Triage Documentation) — ready to start Phase 7 (Kubernetes & Helm Chart)
+- **Current Status:** Phase 7 COMPLETE (Helm Chart & Kubernetes manifests verified) — ready to start Phase 8 (GitOps with Argo CD)
 
 ## 2. Critical Constraints & Operating Rules
 1. **Git commits and pushes:** Agent CAN run `git commit` and `git push` directly. Agent MUST announce the commit message and what is being staged BEFORE executing. Never stage secrets, `.env`, credentials, `__pycache__`, `.venv`, or `*.tfstate`.
@@ -56,7 +56,7 @@
 | 6 | `build(docker): containerize stack with non-root images and docker compose` | ✅ Done |
 | 7 | `ci(pipeline): add test, trivy security scan, and ghcr publishing workflow` | ✅ Done |
 | 8 | `docs(security): document trivy vulnerability scan findings and triage` | ✅ Done |
-| 9 | `feat(k8s): implement modular helm chart with ingress and replica scaling` | ⬜ Phase 7 |
+| 9 | `feat(k8s): implement modular helm chart with ingress and replica scaling` | ✅ Done |
 | 10 | `feat(gitops): configure declarative argo cd application and sync policy` | ⬜ Phase 8 |
 | 11 | `feat(monitoring): configure prometheus scraping and grafana dashboard` | ⬜ Phase 9 |
 | 12 | `feat(terraform): define cost-conscious aws vpc and eks cluster infrastructure` | ⬜ Phase 10 |

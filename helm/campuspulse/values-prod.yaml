@@ -1,0 +1,36 @@
+# ==============================================================================
+# CampusPulse Helm Values — Production Environment (High Availability + HPA)
+# ==============================================================================
+global:
+  environment: production
+
+replicaCount: 2
+
+backend:
+  replicaCount: 3
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+
+frontend:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+
+ingress:
+  enabled: true
+  host: campuspulse.internal

@@ -1,0 +1,40 @@
+# ==============================================================================
+# CampusPulse Helm Values — Development Environment (Single Replica, Local Ingress)
+# ==============================================================================
+global:
+  environment: development
+
+replicaCount: 1
+
+backend:
+  replicaCount: 1
+  image:
+    tag: latest
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+frontend:
+  replicaCount: 1
+  image:
+    tag: latest
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 25m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+autoscaling:
+  enabled: false
+
+ingress:
+  enabled: true
+  host: campuspulse.local

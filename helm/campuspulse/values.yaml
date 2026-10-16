@@ -1,0 +1,112 @@
+# ==============================================================================
+# CampusPulse Helm Values — Production Defaults
+# ==============================================================================
+global:
+  environment: production
+
+replicaCount: 2
+
+# ── Backend Configuration ─────────────────────────────────────────────────────
+backend:
+  name: backend
+  replicaCount: 2
+  image:
+    repository: ghcr.io/abhiroop-011/campuspulse-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+  securityContext:
+    runAsUser: 10001
+    runAsGroup: 10001
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+  probes:
+    liveness:
+      path: /health
+      initialDelaySeconds: 15
+      periodSeconds: 10
+    readiness:
+      path: /ready
+      initialDelaySeconds: 10
+      periodSeconds: 5
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# ── Frontend Configuration ────────────────────────────────────────────────────
+frontend:
+  name: frontend
+  replicaCount: 2
+  image:
+    repository: ghcr.io/abhiroop-011/campuspulse-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+  probes:
+    liveness:
+      path: /
+      initialDelaySeconds: 10
+      periodSeconds: 10
+    readiness:
+      path: /
+      initialDelaySeconds: 5
+      periodSeconds: 5
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+# ── Managed PostgreSQL in Cluster ─────────────────────────────────────────────
+postgres:
+  enabled: true
+  database: campuspulse_db
+  username: campuspulse
+  password: campuspulse_prod_secure_pass
+  host: campuspulse-postgres
+  port: 5432
+  storage:
+    size: 5Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# ── Ingress Controller Routing ────────────────────────────────────────────────
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  host: campuspulse.local
+  tls: []
+
+# ── Horizontal Pod Autoscaling (HPA) ──────────────────────────────────────────
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+# ── Prometheus ServiceMonitor for Observability ───────────────────────────────
+serviceMonitor:
+  enabled: true
+  interval: 15s
+  path: /metrics

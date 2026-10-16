@@ -1,0 +1,109 @@
+{{- if .Values.postgres.enabled }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "campuspulse.fullname" . }}-postgres
+  labels:
+    {{- include "campuspulse.labels" . | nindent 4 }}
+    app: campuspulse-postgres
+type: Opaque
+stringData:
+  username: {{ .Values.postgres.username | quote }}
+  password: {{ .Values.postgres.password | quote }}
+  database: {{ .Values.postgres.database | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.postgres.host }}
+  labels:
+    {{- include "campuspulse.labels" . | nindent 4 }}
+    app: campuspulse-postgres
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.postgres.port }}
+      targetPort: 5432
+      name: postgres
+  selector:
+    app: campuspulse-postgres
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "campuspulse.fullname" . }}-postgres
+  labels:
+    {{- include "campuspulse.labels" . | nindent 4 }}
+    app: campuspulse-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: campuspulse-postgres
+  template:
+    metadata:
+      labels:
+        app: campuspulse-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "campuspulse.fullname" . }}-postgres
+                  key: database
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "campuspulse.fullname" . }}-postgres
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "campuspulse.fullname" . }}-postgres
+                  key: password
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          resources:
+            {{- toYaml .Values.postgres.resources | nindent 12 }}
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: {{ include "campuspulse.fullname" . }}-postgres-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "campuspulse.fullname" . }}-postgres-data
+  labels:
+    {{- include "campuspulse.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.postgres.storage.size }}
+{{- end }}
