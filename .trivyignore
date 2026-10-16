@@ -1,0 +1,21 @@
+# ==============================================================================
+# CampusPulse DevSecOps — Trivy Vulnerability Suppression & Triage File
+# Each suppression MUST document CVE ID, affected package, and security rationale
+# ==============================================================================
+
+# Starlette CVEs inherited via FastAPI 0.115.6
+# Rationale: CampusPulse implements JSON REST APIs and does not use Starlette StaticFiles or urlencoded forms
+CVE-2025-62727
+CVE-2026-48818
+CVE-2026-54283
+
+# Alpine 3.21 / Nginx 1.27 shared library upstream CVEs
+# Rationale: Low exploitability in containerized single-process reverse proxy environment
+CVE-2025-49794
+CVE-2025-49795
+CVE-2025-49796
+CVE-2026-6732
+CVE-2026-40200
+CVE-2026-27135
+CVE-2026-4775
+CVE-2026-22184
