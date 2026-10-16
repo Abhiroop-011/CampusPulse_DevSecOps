@@ -1,0 +1,28 @@
+# ==============================================================================
+# CampusPulse GitOps — Argo CD AppProject Specification
+# Boundaries, destination clusters, allowed source repositories
+# ==============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: campuspulse-project
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: campuspulse
+spec:
+  description: CampusPulse DevSecOps Production and Staging Project
+  sourceRepos:
+    - "https://github.com/Abhiroop-011/CampusPulse_DevSecOps.git"
+  destinations:
+    - namespace: "campuspulse"
+      server: "https://kubernetes.default.svc"
+    - namespace: "campuspulse-staging"
+      server: "https://kubernetes.default.svc"
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+    - group: "networking.k8s.io"
+      kind: IngressClass
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

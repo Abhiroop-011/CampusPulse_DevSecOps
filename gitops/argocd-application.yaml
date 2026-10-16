@@ -1,0 +1,43 @@
+# ==============================================================================
+# CampusPulse GitOps — Argo CD Declarative Application
+# Automated Sync, Self-Healing, and Automated Pruning
+# ==============================================================================
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: campuspulse
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: campuspulse
+    app.kubernetes.io/part-of: campuspulse
+    environment: production
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: campuspulse-project
+  source:
+    repoURL: https://github.com/Abhiroop-011/CampusPulse_DevSecOps.git
+    targetRevision: main
+    path: helm/campuspulse
+    helm:
+      valueFiles:
+        - values.yaml
+        - values-prod.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: campuspulse
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
