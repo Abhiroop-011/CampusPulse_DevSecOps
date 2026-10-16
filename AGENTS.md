@@ -7,7 +7,7 @@
 - **GitHub Repository:** `https://github.com/Abhiroop-011/CampusPulse_DevSecOps.git`
 - **Reference Repository:** `c:\Users\Abhiroop\Downloads\devsecops-python-main\devsecops-python-main` (Read-only reference)
 - **Submission Deadline:** Sunday, 19 October 2026, 11:59 PM IST (Late penalty: -5 pts / 24h)
-- **Current Status:** Phase 9 COMPLETE (Prometheus scraping & Grafana dashboard configured) — ready to start Phase 10 (Terraform: AWS VPC & EKS Infrastructure)
+- **Current Status:** Phase 10 COMPLETE (Terraform AWS VPC & EKS validated) — ready for Phase 11 / Phase 12
 
 ## 2. Critical Constraints & Operating Rules
 1. **Git commits and pushes:** Agent CAN run `git commit` and `git push` directly. Agent MUST announce the commit message and what is being staged BEFORE executing. Never stage secrets, `.env`, credentials, `__pycache__`, `.venv`, or `*.tfstate`.
@@ -41,8 +41,8 @@
 - **Docker Desktop:** v29.7.2 (WSL2 backend — must be running before starting Postgres container)
 - **Node.js:** Available at C:\Program Files\nodejs\
 - **Kubernetes (Local):** Docker Desktop K8s — NOT yet enabled. Enable in Docker Desktop > Settings > Kubernetes before Phase 7.
-- **Terraform:** NOT installed. Install via `choco install terraform` or winget before Phase 10.
-- **Helm:** NOT installed. Install via `choco install kubernetes-helm` or winget before Phase 7.
+- **Terraform:** v1.16.5 installed at `C:\Users\Abhiroop\AppData\Local\Microsoft\WinGet\Packages\Hashicorp.Terraform_Microsoft.Winget.Source_8wekyb3d8bbwe\terraform.exe`
+- **Helm:** v4.3.1 installed at `C:\Users\Abhiroop\AppData\Local\Microsoft\WinGet\Packages\Helm.Helm_Microsoft.Winget.Source_8wekyb3d8bbwe\windows-amd64\helm.exe`
 
 ## 5. Commit Plan Status
 
@@ -59,7 +59,7 @@
 | 9 | `feat(k8s): implement modular helm chart with ingress and replica scaling` | ✅ Done |
 | 10 | `feat(gitops): configure declarative argo cd application and sync policy` | ✅ Done |
 | 11 | `feat(monitoring): configure prometheus scraping and grafana dashboard` | ✅ Done |
-| 12 | `feat(terraform): define cost-conscious aws vpc and eks cluster infrastructure` | ⬜ Phase 10 |
+| 12 | `feat(terraform): define cost-conscious aws vpc and eks cluster infrastructure` | ✅ Done |
 | 13 | `docs(evidence): record aws cluster deployment, ingress verification, and teardown` | ⬜ Phase 11 |
 | 14 | `docs(capstone): complete technical documentation and video presentation script` | ⬜ Phase 12 |
 
