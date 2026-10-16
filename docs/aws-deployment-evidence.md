@@ -115,12 +115,42 @@ ip-10-30-2-30.ap-southeast-2.compute.internal   Ready    <none>   101s   v1.31.1
 ```text
 $ kubectl get pods -A
 NAMESPACE     NAME                       READY   STATUS    RESTARTS   AGE
-kube-system   aws-node-j7m48             2/2     Running   0          2m4s
-kube-system   aws-node-kmbww             2/2     Running   0          2m2s
-kube-system   coredns-7585b665d8-twqwb   1/1     Running   0          5m52s
-kube-system   coredns-7585b665d8-wcjvz   1/1     Running   0          5m52s
-kube-system   kube-proxy-l4pzw           1/1     Running   0          2m4s
-kube-system   kube-proxy-wqpzh           1/1     Running   0          2m2s
+kube-system   aws-node-j7m48             2/2     Running   0          12m
+kube-system   aws-node-kmbww             2/2     Running   0          12m
+kube-system   coredns-7585b665d8-twqwb   1/1     Running   0          16m
+kube-system   coredns-7585b665d8-wcjvz   1/1     Running   0          16m
+kube-system   kube-proxy-l4pzw           1/1     Running   0          12m
+kube-system   kube-proxy-wqpzh           1/1     Running   0          12m
+```
+
+### D. Live Helm Application Pods (`campuspulse` Namespace)
+```text
+$ kubectl get pods -n campuspulse
+NAME                                    READY   STATUS    RESTARTS   AGE
+campuspulse-backend-67cbfc85dc-22dkn    1/1     Running   0          33s
+campuspulse-backend-67cbfc85dc-q5xzl    1/1     Running   0          17s
+campuspulse-frontend-75bc4f45db-5b2n6   1/1     Running   0          2m28s
+campuspulse-frontend-75bc4f45db-c5kjw   1/1     Running   0          2m18s
+campuspulse-postgres-98b4f4d7-gfgcm     1/1     Running   0          3m27s
+```
+
+### E. Live End-to-End In-Cluster API Verification
+```text
+# 1. Health Probe
+$ kubectl exec deployment/campuspulse-backend -n campuspulse -- python -c "import urllib.request; print(urllib.request.urlopen('http://localhost:8000/health').read().decode())"
+{"status":"healthy"}
+
+# 2. Database Readiness & Connectivity
+$ kubectl exec deployment/campuspulse-backend -n campuspulse -- python -c "import urllib.request; print(urllib.request.urlopen('http://localhost:8000/ready').read().decode())"
+{"status":"ready","database":"connected"}
+
+# 3. Seeded Database Aggregation
+$ kubectl exec deployment/campuspulse-backend -n campuspulse -- python -c "import urllib.request; print(urllib.request.urlopen('http://localhost:8000/api/stats').read().decode())"
+{"total_events":6,"published_events":6,"total_clubs":6,"total_registrations":0,"average_capacity_utilization":38.9}
+
+# 4. Frontend Reverse Proxy
+$ kubectl exec deployment/campuspulse-frontend -n campuspulse -- wget -qO- http://localhost:80/api/stats
+{"total_events":6,"published_events":6,"total_clubs":6,"total_registrations":0,"average_capacity_utilization":38.9}
 ```
 
 ---

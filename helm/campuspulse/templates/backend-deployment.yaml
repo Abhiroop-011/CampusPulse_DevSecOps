@@ -27,6 +27,8 @@ spec:
             - containerPort: {{ .Values.backend.service.targetPort }}
               name: http
           env:
+            - name: BACKEND_PORT
+              value: "8000"
             - name: DATABASE_URL
               value: "postgresql+psycopg://{{ .Values.postgres.username }}:{{ .Values.postgres.password }}@{{ .Values.postgres.host }}:{{ .Values.postgres.port }}/{{ .Values.postgres.database }}"
             - name: ENVIRONMENT
