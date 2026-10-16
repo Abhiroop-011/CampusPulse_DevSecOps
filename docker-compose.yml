@@ -1,0 +1,72 @@
+# ==============================================================================
+# CampusPulse DevSecOps — Local Multi-Container Stack
+# Services: PostgreSQL 16 Alpine, FastAPI Backend, React/Nginx Frontend
+# ==============================================================================
+name: campuspulse
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: campuspulse-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: campuspulse
+      POSTGRES_PASSWORD: campuspulse_dev_pass
+      POSTGRES_DB: campuspulse_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U campuspulse -d campuspulse_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - campuspulse-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: campuspulse-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://campuspulse:campuspulse_dev_pass@postgres:5432/campuspulse_db
+      ENVIRONMENT: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - campuspulse-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: campuspulse-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "3000:80"
+    networks:
+      - campuspulse-net
+
+networks:
+  campuspulse-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
