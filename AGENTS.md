@@ -7,7 +7,7 @@
 - **GitHub Repository:** `https://github.com/Abhiroop-011/CampusPulse_DevSecOps.git`
 - **Reference Repository:** `c:\Users\Abhiroop\Downloads\devsecops-python-main\devsecops-python-main` (Read-only reference)
 - **Submission Deadline:** Sunday, 19 October 2026, 11:59 PM IST (Late penalty: -5 pts / 24h)
-- **Current Status:** Phase 8 COMPLETE (Argo CD GitOps application and sync policy configured) — ready to start Phase 9 (Observability: Prometheus + Grafana)
+- **Current Status:** Phase 9 COMPLETE (Prometheus scraping & Grafana dashboard configured) — ready to start Phase 10 (Terraform: AWS VPC & EKS Infrastructure)
 
 ## 2. Critical Constraints & Operating Rules
 1. **Git commits and pushes:** Agent CAN run `git commit` and `git push` directly. Agent MUST announce the commit message and what is being staged BEFORE executing. Never stage secrets, `.env`, credentials, `__pycache__`, `.venv`, or `*.tfstate`.
@@ -58,7 +58,7 @@
 | 8 | `docs(security): document trivy vulnerability scan findings and triage` | ✅ Done |
 | 9 | `feat(k8s): implement modular helm chart with ingress and replica scaling` | ✅ Done |
 | 10 | `feat(gitops): configure declarative argo cd application and sync policy` | ✅ Done |
-| 11 | `feat(monitoring): configure prometheus scraping and grafana dashboard` | ⬜ Phase 9 |
+| 11 | `feat(monitoring): configure prometheus scraping and grafana dashboard` | ✅ Done |
 | 12 | `feat(terraform): define cost-conscious aws vpc and eks cluster infrastructure` | ⬜ Phase 10 |
 | 13 | `docs(evidence): record aws cluster deployment, ingress verification, and teardown` | ⬜ Phase 11 |
 | 14 | `docs(capstone): complete technical documentation and video presentation script` | ⬜ Phase 12 |
@@ -72,5 +72,5 @@
 - [ ] terraform plan output (Phase 10)
 - [ ] AWS Console: VPC + EKS (Phase 11)
 - [ ] kubectl get pods -n campuspulse (Phase 7/11)
-- [ ] Prometheus Targets UP (Phase 9)
+- [x] Prometheus Targets UP (Phase 9)
 - [ ] Grafana dashboard screenshot (Phase 9)

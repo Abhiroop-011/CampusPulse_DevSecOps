@@ -1,0 +1,92 @@
+# ==============================================================================
+# CampusPulse Observability — Prometheus Helm Chart Values
+# Chart: prometheus-community/kube-prometheus-stack
+# Scrapes: CampusPulse FastAPI /metrics, Node exporter, and Kubernetes metrics
+# ==============================================================================
+global:
+  rbac:
+    create: true
+
+# ── Prometheus Server ─────────────────────────────────────────────────────────
+prometheus:
+  enabled: true
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector:
+      matchLabels:
+        release: prometheus
+    serviceMonitorNamespaceSelector: {}
+    retention: 7d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 5Gi
+    resources:
+      requests:
+        cpu: 150m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+    additionalScrapeConfigs:
+      - job_name: "campuspulse-service-direct"
+        metrics_path: /metrics
+        scrape_interval: 15s
+        static_configs:
+          - targets: ["campuspulse-backend.campuspulse.svc.cluster.local:8000"]
+            labels:
+              app: campuspulse-backend
+              environment: production
+
+# ── Alertmanager ──────────────────────────────────────────────────────────────
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    retention: 120h
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+
+# ── Grafana ───────────────────────────────────────────────────────────────────
+grafana:
+  enabled: true
+  adminPassword: "admin_campuspulse_secure_2026"
+  persistence:
+    enabled: true
+    size: 2Gi
+  service:
+    type: ClusterIP
+    port: 80
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: "campuspulse"
+          orgId: 1
+          folder: "CampusPulse"
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/campuspulse
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 300m
+      memory: 512Mi
+
+# ── Node Exporter & kube-state-metrics ─────────────────────────────────────────
+nodeExporter:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true
