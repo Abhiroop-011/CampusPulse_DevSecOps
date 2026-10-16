@@ -67,7 +67,7 @@
 - [x] Browser screenshot: CampusPulse at localhost:3000 (Phase 4)
 - [x] pytest -v 30/30 passing (capture terminal screenshot after commit)
 - [x] docker compose up --build success (Phase 5)
-- [ ] GitHub Actions green run + GHCR packages (Phase 6)
+- [x] GitHub Actions green run + GHCR packages (Phase 6)
 - [x] Trivy scan output (Phase 6)
 - [ ] terraform plan output (Phase 10)
 - [ ] AWS Console: VPC + EKS (Phase 11)
