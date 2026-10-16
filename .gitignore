@@ -74,3 +74,5 @@ override.tf.json
 # Helm & K8s Local artifacts
 *.tgz
 helm/*.tgz
+
+demo/presentation-script.md

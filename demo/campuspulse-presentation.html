@@ -1,0 +1,574 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>CampusPulse - DevSecOps Capstone</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{--pr:#2563eb;--ac:#16a34a;--bg:#f8fafc;--card:#fff;--tx:#1e293b;--mu:#64748b;--bd:#e2e8f0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;}
+.ss{width:100vw;height:100vh;position:relative;overflow:hidden;}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:36px 56px;opacity:0;transform:translateX(60px);transition:all .45s cubic-bezier(.4,0,.2,1);pointer-events:none;}
+.slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
+.slide.exit{opacity:0;transform:translateX(-60px);}
+.si{width:100%;max-width:880px;}
+.lbl{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;opacity:.6;margin-bottom:8px;}
+h1{font-size:48px;font-weight:800;line-height:1.1;margin-bottom:14px;}
+h2{font-size:30px;font-weight:700;margin-bottom:12px;line-height:1.2;}
+.sub{font-size:17px;font-weight:400;opacity:.82;line-height:1.65;}
+.badge{display:inline-flex;padding:3px 11px;border-radius:100px;font-size:12px;font-weight:600;margin:2px;}
+.bb{background:#dbeafe;color:#1d4ed8;}.bg{background:#dcfce7;color:#15803d;}
+.bo{background:#ffedd5;color:#c2410c;}.bp{background:#ede9fe;color:#7c3aed;}.bx{background:#f1f5f9;color:#475569;}
+.grid{display:grid;gap:12px;margin-top:18px;}
+.g2{grid-template-columns:1fr 1fr;}.g3{grid-template-columns:1fr 1fr 1fr;}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.cd{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:16px 18px;}
+.ci{font-size:24px;margin-bottom:5px;}.card h3{font-size:13px;font-weight:700;margin-bottom:4px;color:var(--tx);}
+.card p{font-size:12px;color:var(--mu);line-height:1.5;}.cd h3{color:rgba(255,255,255,.95);}
+.cd p{font-size:12px;color:rgba(255,255,255,.65);line-height:1.5;}
+.steps{list-style:none;margin-top:14px;}
+.steps li{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid rgba(0,0,0,.06);}
+.steps li:last-child{border-bottom:none;}
+.sn{min-width:24px;height:24px;border-radius:50%;background:var(--pr);color:#fff;font-size:11px;
+  font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb strong{font-size:13px;font-weight:600;display:block;margin-bottom:2px;}
+.sb span{font-size:12px;color:var(--mu);}
+.sl .sn{background:rgba(255,255,255,.2);}.sl .sb strong{color:#fff;}.sl .sb span{color:rgba(255,255,255,.6);}
+.cb{background:#0f172a;border-radius:10px;padding:12px 16px;font-family:'JetBrains Mono',monospace;
+  font-size:12px;color:#e2e8f0;margin-top:12px;line-height:1.7;overflow-x:auto;}
+.cm{color:#64748b;}.cc{color:#86efac;}.co{color:#93c5fd;}
+.sr{display:flex;gap:12px;margin-top:16px;}
+.s2{flex:1;text-align:center;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;}
+.s2 .num{font-size:32px;font-weight:800;color:var(--pr);line-height:1;}
+.s2 .ll{font-size:11px;color:var(--mu);margin-top:3px;font-weight:500;}
+.s3{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px;flex:1;text-align:center;}
+.s3 .num{font-size:32px;font-weight:800;color:#93c5fd;line-height:1;}
+.s3 .ll{font-size:11px;color:rgba(255,255,255,.55);margin-top:3px;font-weight:500;}
+.flow{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin-top:20px;}
+.fn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;
+  padding:9px 12px;text-align:center;font-size:11px;font-weight:600;color:#fff;min-width:90px;}
+.fa{color:rgba(255,255,255,.4);font-size:18px;padding:0 4px;}
+.fn .ic{font-size:18px;display:block;margin-bottom:2px;}
+.cl{list-style:none;margin-top:14px;}
+.cl li{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px;border-bottom:1px solid rgba(0,0,0,.05);}
+.cl li:last-child{border-bottom:none;}.chk{font-size:15px;}
+.at{width:100%;border-collapse:collapse;margin-top:14px;font-size:12px;}
+.at th{background:#f1f5f9;font-weight:700;padding:8px 12px;text-align:left;color:var(--mu);font-size:10px;text-transform:uppercase;letter-spacing:1px;}
+.at td{padding:9px 12px;border-bottom:1px solid var(--bd);vertical-align:top;}
+.at tr:last-child td{border-bottom:none;}
+.nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;align-items:center;
+  gap:10px;background:rgba(15,23,42,.88);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.12);border-radius:50px;padding:6px 14px;z-index:100;
+  box-shadow:0 4px 24px rgba(0,0,0,.25);}
+.nav button{background:none;border:none;color:rgba(255,255,255,.7);font-size:17px;cursor:pointer;
+  padding:4px 7px;border-radius:7px;transition:all .2s;line-height:1;}
+.nav button:hover:not(:disabled){background:rgba(255,255,255,.1);color:#fff;}
+.nav button:disabled{opacity:.25;cursor:default;}
+.nc{font-size:12px;font-weight:600;color:rgba(255,255,255,.7);min-width:52px;text-align:center;}
+.dots{display:flex;gap:4px;align-items:center;}
+.dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:all .2s;}
+.dot.active{background:#fff;width:14px;border-radius:3px;}
+.hint{position:fixed;top:14px;right:20px;font-size:11px;color:rgba(100,116,139,.6);}
+.ct{position:fixed;top:14px;left:20px;font-size:11px;font-weight:600;color:rgba(100,116,139,.55);}
+.dv{height:3px;width:40px;border-radius:2px;margin-bottom:12px;}
+.dw{background:rgba(255,255,255,.35);}.db{background:var(--pr);}.dg{background:var(--ac);}
+.tc{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;margin-top:14px;}
+.tr{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;}
+code{font-family:'JetBrains Mono',monospace;font-size:11px;background:#f1f5f9;color:#c026d3;padding:1px 5px;border-radius:4px;}
+/* themes */
+.st{background:linear-gradient(145deg,#1e40af,#2563eb);color:#fff;}
+.sp{background:linear-gradient(145deg,#0f172a,#1e293b);color:#fff;}
+.sk{background:#fff;}
+.se{background:linear-gradient(145deg,#f0fdf4,#dcfce7);}
+.sd{background:#f0f9ff;}
+.sc{background:linear-gradient(145deg,#1e293b,#0f172a);color:#fff;}
+.sg{background:linear-gradient(145deg,#fff7ed,#fef3c7);}
+.sh{background:#f5f3ff;}
+.sm{background:linear-gradient(145deg,#0f172a,#1a2035);color:#fff;}
+.sf{background:linear-gradient(145deg,#1e40af,#2563eb);color:#fff;}
+.sc code,.sp code,.sm code,.sf code{background:rgba(255,255,255,.12);color:#86efac;}
+</style>
+</head>
+<body>
+<div class="ss" id="ss">
+<!-- SLIDE 1: TITLE -->
+<div class="slide st active" data-index="0">
+<div class="si">
+  <div class="lbl">DevSecOps Capstone</div>
+<div style="font-size:13px;opacity:.78;margin-bottom:8px;letter-spacing:.3px;"><strong>Abhiroop Sistu</strong>&nbsp;&nbsp;|&nbsp;&nbsp;Roll No: 10287&nbsp;&nbsp;|&nbsp;&nbsp;Batch: A</div>
+  <div class="dv dw"></div>
+  <h1>CampusPulse</h1>
+  <p class="sub">A campus events and club management platform built end-to-end using a modern <strong>12-phase DevSecOps lifecycle</strong> from code to cloud.</p>
+  <div class="tr" style="margin-top:22px;">
+    <span class="badge bb">React 19</span><span class="badge bb">FastAPI</span><span class="badge bg">PostgreSQL 16</span>
+    <span class="badge bg">Docker</span><span class="badge bp">Kubernetes 1.31</span><span class="badge bp">Helm 3</span>
+    <span class="badge bo">Terraform</span><span class="badge bo">AWS EKS</span><span class="badge bx">Prometheus</span>
+    <span class="badge bx">Grafana</span><span class="badge bx">Argo CD</span><span class="badge bx">Trivy</span>
+  </div>
+</div></div>
+
+<!-- SLIDE 2: WHAT IS CAMPUSPULSE -->
+<div class="slide sp" data-index="1">
+<div class="si">
+  <div class="lbl">The Project</div>
+  <div class="dv dw"></div>
+  <h2>What is CampusPulse?</h2>
+  <p class="sub" style="margin-bottom:18px;opacity:.75;">A real full-stack web app students can actually use - built as the subject of a complete DevSecOps pipeline from laptop to AWS cloud.</p>
+  <div class="grid g3">
+    <div class="cd"><div class="ci">🏛️</div><h3>Club Directory</h3><p>Browse active student clubs - Tech, Arts, Sports - with descriptions and live member counts.</p></div>
+    <div class="cd"><div class="ci">📅</div><h3>Event Listings</h3><p>Upcoming events with real-time seat capacity, dates, and organiser details.</p></div>
+    <div class="cd"><div class="ci">✅</div><h3>Instant Registration</h3><p>Register via modal form. Seat count drops live. No page reload needed.</p></div>
+  </div>
+  <div class="sr">
+    <div class="s3"><div class="num">6</div><div class="ll">Clubs Seeded</div></div>
+    <div class="s3"><div class="num">6</div><div class="ll">Events Seeded</div></div>
+    <div class="s3"><div class="num">30</div><div class="ll">Pytest Tests</div></div>
+    <div class="s3"><div class="num">17</div><div class="ll">Evidence Screenshots</div></div>
+  </div>
+</div></div>
+
+<!-- SLIDE 3: TECH STACK -->
+<div class="slide sk" data-index="2">
+<div class="si">
+  <div class="lbl">Architecture</div>
+  <div class="dv db"></div>
+  <h2>Technology Stack</h2>
+  <table class="at">
+    <tr><th>Layer</th><th>Technology</th><th>Why</th></tr>
+    <tr><td>🌐 Frontend</td><td><strong>React 19 + Vite + Vanilla CSS</strong></td><td>Fast HMR, no runtime bloat, component-based UI</td></tr>
+    <tr><td>⚡ Backend</td><td><strong>FastAPI + Pydantic v2 + SQLAlchemy 2.0</strong></td><td>Async Python, auto OpenAPI docs, strict validation</td></tr>
+    <tr><td>🗄️ Database</td><td><strong>PostgreSQL 16 + Alembic migrations</strong></td><td>ACID compliance, versioned schema, relational integrity</td></tr>
+    <tr><td>📦 Containers</td><td><strong>Docker multi-stage, non-root UID 10001</strong></td><td>Minimal attack surface, images under 150 MB</td></tr>
+    <tr><td>☸️ Orchestration</td><td><strong>Kubernetes 1.31 + Helm 3</strong></td><td>Declarative deploys, replica scaling, health probes</td></tr>
+    <tr><td>☁️ Cloud IaC</td><td><strong>Terraform + AWS EKS + VPC</strong></td><td>53 resources from code, reproducible, destroyable</td></tr>
+    <tr><td>📊 Observability</td><td><strong>Prometheus + Grafana</strong></td><td>Real-time metrics, dashboards, alert-ready</td></tr>
+  </table>
+</div></div>
+
+<!-- SLIDE 4: PIPELINE -->
+<div class="slide sc" data-index="3">
+<div class="si">
+  <div class="lbl">DevSecOps Lifecycle</div>
+  <div class="dv dw"></div>
+  <h2>The Full Pipeline - Git Push to Production</h2>
+  <div class="flow">
+    <div class="fn"><span class="ic">💻</span>Code Push</div><div class="fa">→</div>
+    <div class="fn"><span class="ic">🔬</span>Pytest (30)</div><div class="fa">→</div>
+    <div class="fn"><span class="ic">🔒</span>Trivy Scan</div><div class="fa">→</div>
+    <div class="fn"><span class="ic">📦</span>GHCR Publish</div><div class="fa">→</div>
+    <div class="fn"><span class="ic">🔄</span>Argo CD Sync</div><div class="fa">→</div>
+    <div class="fn"><span class="ic">☸️</span>EKS Deploy</div>
+  </div>
+  <div class="grid g3" style="margin-top:20px;">
+    <div class="cd"><div class="ci">🤖</div><h3>Fully Automated</h3><p>Every push to main triggers the pipeline. Zero manual steps to deploy to production.</p></div>
+    <div class="cd"><div class="ci">🔐</div><h3>Security Gated</h3><p>Images with unmitigated HIGH/CRITICAL CVEs are blocked before reaching the registry.</p></div>
+    <div class="cd"><div class="ci">📜</div><h3>GitOps Driven</h3><p>Argo CD watches Git and self-heals cluster drift automatically, no kubectl required.</p></div>
+  </div>
+</div></div>
+<!-- SLIDE 5: TESTING -->
+<div class="slide se" data-index="4">
+<div class="si">
+  <div class="lbl">Phase 2 - Testing</div>
+  <div class="dv dg"></div>
+  <h2>✅ 30/30 Automated Tests - Always Green</h2>
+  <div class="tc">
+    <div>
+      <p style="color:var(--mu);margin-bottom:12px;font-size:14px;">Full route, model, and edge-case coverage. Runs on in-memory SQLite - under <strong>1 second</strong>, zero external dependencies.</p>
+      <ul class="steps">
+        <li><span class="sn">8</span><div class="sb"><strong>Health and Readiness</strong><span>/health and /ready probe verification</span></div></li>
+        <li><span class="sn">10</span><div class="sb"><strong>Clubs CRUD</strong><span>Create, list, get by ID, 404 on missing club</span></div></li>
+        <li><span class="sn">8</span><div class="sb"><strong>Events and Registration</strong><span>Register, capacity enforcement, duplicate detection</span></div></li>
+        <li><span class="sn">4</span><div class="sb"><strong>Stats and Metrics</strong><span>Aggregated responses and Prometheus exposure</span></div></li>
+      </ul>
+    </div>
+    <div>
+      <div class="cb">
+<span class="cm">$ pytest -v backend/tests/</span>
+<span class="cc">PASSED</span> <span class="co">test_health::test_health_check</span>
+<span class="cc">PASSED</span> <span class="co">test_clubs::test_create_club</span>
+<span class="cc">PASSED</span> <span class="co">test_clubs::test_list_clubs</span>
+<span class="cc">PASSED</span> <span class="co">test_events::test_register</span>
+<span class="cc">PASSED</span> <span class="co">test_events::test_capacity_limit</span>
+<span class="cm">... 25 more tests ...</span>
+<span class="cc">====== 30 passed in 0.78s ======</span>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:7px;flex-wrap:wrap;">
+        <span class="badge bg">✓ 30/30 Passing</span>
+        <span class="badge bg">✓ Under 1 Second</span>
+        <span class="badge bb">SQLite In-Memory</span>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<!-- SLIDE 6: DOCKER -->
+<div class="slide sd" data-index="5">
+<div class="si">
+  <div class="lbl">Phase 3 - Containers</div>
+  <div class="dv db"></div>
+  <h2>🐳 Docker - Multi-Stage, Non-Root</h2>
+  <div class="tc">
+    <div>
+      <div class="grid" style="margin-top:0;gap:10px;">
+        <div class="card"><div class="ci">⚙️</div><h3>Backend - FastAPI</h3><p>Multi-stage build. Runtime is python:3.12-slim, runs as UID 10001. No shell, no root access.</p></div>
+        <div class="card"><div class="ci">🌐</div><h3>Frontend - React to Nginx</h3><p>Node 22 builds the Vite bundle. Final image is nginx:1.27-alpine serving static files only.</p></div>
+        <div class="card"><div class="ci">🗄️</div><h3>Database - PostgreSQL 16</h3><p>Official postgres:16-alpine with env-var seeded credentials and persistent data volume.</p></div>
+      </div>
+    </div>
+    <div>
+      <p style="color:var(--mu);font-size:13px;margin-bottom:10px;">One command - entire 3-tier stack:</p>
+      <div class="cb">
+<span class="cc">$ docker compose up --build -d</span>
+<span class="co">✔ campuspulse-postgres  healthy</span>
+<span class="co">✔ campuspulse-backend   healthy</span>
+<span class="co">✔ campuspulse-frontend  healthy</span>
+      </div>
+      <div style="margin-top:14px;font-size:13px;">
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd);">
+          <span>🌐 Dashboard</span><code style="background:none;color:var(--pr);">localhost:3000</code></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd);">
+          <span>⚡ API Docs</span><code style="background:none;color:var(--pr);">localhost:8000/docs</code></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd);">
+          <span>❤️ Health</span><code style="background:none;color:var(--pr);">localhost:8000/health</code></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;">
+          <span>📊 Metrics</span><code style="background:none;color:var(--pr);">localhost:8000/metrics</code></div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<!-- SLIDE 7: CI/CD -->
+<div class="slide sc" data-index="6">
+<div class="si">
+  <div class="lbl">Phase 4 - CI/CD Automation</div>
+  <div class="dv dw"></div>
+  <h2>🔁 GitHub Actions - 100% Green Pipeline</h2>
+  <div class="tc">
+    <div>
+      <ul class="steps sl">
+        <li><span class="sn" style="font-size:10px;">1</span><div class="sb"><strong>🔬 Run 30 Pytest Tests</strong><span>Fail pipeline on any failure - code quality gate</span></div></li>
+        <li><span class="sn" style="font-size:10px;">2</span><div class="sb"><strong>🏗️ Build Vite Frontend Bundle</strong><span>npm ci and vite build - validates production output compiles</span></div></li>
+        <li><span class="sn" style="font-size:10px;">3</span><div class="sb"><strong>🐳 Multi-Stage Docker Builds</strong><span>Build both images tagged with Git commit SHA for immutability</span></div></li>
+        <li><span class="sn" style="font-size:10px;">4</span><div class="sb"><strong>🔒 Aqua Trivy Security Scan</strong><span>Block publish if any CRITICAL or HIGH CVE found - security gate</span></div></li>
+        <li><span class="sn" style="font-size:10px;">5</span><div class="sb"><strong>📤 Publish to GHCR</strong><span>Push SHA-tagged images to GitHub Container Registry</span></div></li>
+      </ul>
+    </div>
+    <div>
+      <div class="cd">
+        <p style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:9px;">GHCR container artifacts:</p>
+        <div class="cb" style="margin-top:0;font-size:11px;">
+<span class="co">ghcr.io/abhiroop-011/campuspulse-backend</span>
+<span class="cm">  :sha-a3f8b12   :latest</span>
+<span class="co">ghcr.io/abhiroop-011/campuspulse-frontend</span>
+<span class="cm">  :sha-a3f8b12   :latest</span>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="badge bg">✓ All Jobs Green</span>
+          <span class="badge bb">SHA-Tagged</span>
+          <span class="badge bp">GHCR Published</span>
+        </div>
+      </div>
+      <div class="cd" style="margin-top:10px;">
+        <p style="font-size:13px;color:rgba(255,255,255,.82);">🔑 <strong>Zero secrets in repo.</strong> All credentials in GitHub Actions Secrets, injected at runtime only.</p>
+      </div>
+    </div>
+  </div>
+</div></div>
+<!-- SLIDE 8: SECURITY -->
+<div class="slide sg" data-index="7">
+<div class="si">
+  <div class="lbl">Phase 5 - Security</div>
+  <div class="dv" style="background:#d97706;"></div>
+  <h2>🛡️ Security at Every Layer</h2>
+  <div class="grid g2">
+    <div class="card">
+      <div class="ci">🔍</div><h3>Aqua Trivy CVE Scanning</h3>
+      <p>Scans Docker images in CI before the registry push. Blocks any CRITICAL or HIGH CVE not explicitly documented and triaged.</p>
+      <div style="margin-top:8px;"><span class="badge bg">0 Critical</span><span class="badge bg">0 High (unmitigated)</span></div>
+    </div>
+    <div class="card"><div class="ci">🚫</div><h3>Non-Root Containers</h3><p>Backend runs as <strong>UID 10001</strong>. Frontend as the <strong>nginx</strong> user. No container process ever runs as root.</p></div>
+    <div class="card"><div class="ci">🔐</div><h3>Zero Secret Leakage</h3><p>All .env, .tfstate, and *.pem files blocked via .gitignore. Git history is completely clean of credentials.</p></div>
+    <div class="card"><div class="ci">🏗️</div><h3>AWS Cloud Hardening</h3><p><strong>KMS envelope encryption</strong> for Kubernetes secrets and <strong>IMDSv2 mandatory tokens</strong> to block SSRF credential theft attacks.</p></div>
+  </div>
+</div></div>
+
+<!-- SLIDE 9: HELM -->
+<div class="slide sh" data-index="8">
+<div class="si">
+  <div class="lbl">Phase 6 - Orchestration</div>
+  <div class="dv" style="background:#7c3aed;"></div>
+  <h2>☸️ Kubernetes and Helm - Declarative Deployment</h2>
+  <div class="tc">
+    <div>
+      <p style="color:var(--mu);font-size:13px;margin-bottom:12px;">A modular Helm chart packages the whole application. One command deploys or upgrades everything cleanly.</p>
+      <div class="cb">
+<span class="cm"># Deploy the whole application</span>
+<span class="cc">helm upgrade --install campuspulse \</span>
+<span class="cc">  ./helm/campuspulse \</span>
+<span class="cc">  -n campuspulse --create-namespace</span>
+
+<span class="cm"># Verify release</span>
+<span class="cc">helm list -n campuspulse</span>
+<span class="co">campuspulse  3  deployed  campuspulse-1.0.0</span>
+      </div>
+    </div>
+    <div>
+      <p style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:9px;">Helm Chart Templates:</p>
+      <ul class="cl">
+        <li><span class="chk">📄</span>Deployment - backend (2 replicas)</li>
+        <li><span class="chk">📄</span>Deployment - frontend (2 replicas)</li>
+        <li><span class="chk">📄</span>Deployment - postgres database</li>
+        <li><span class="chk">📄</span>Services (ClusterIP and NodePort)</li>
+        <li><span class="chk">📄</span>ConfigMap (application config)</li>
+        <li><span class="chk">📄</span>Secret (DB credentials, base64)</li>
+        <li><span class="chk">📄</span>Ingress (path-based routing)</li>
+        <li><span class="chk">📄</span>PersistentVolumeClaim</li>
+      </ul>
+    </div>
+  </div>
+</div></div>
+
+<!-- SLIDE 10: TERRAFORM -->
+<div class="slide sc" data-index="9">
+<div class="si">
+  <div class="lbl">Phase 7 - Infrastructure as Code</div>
+  <div class="dv dw"></div>
+  <h2>🏗️ Terraform - 53 AWS Resources from Code</h2>
+  <div class="tc">
+    <div>
+      <ul class="steps sl">
+        <li><span class="sn" style="font-size:9px;">VPC</span><div class="sb"><strong>Isolated Network (10.30.0.0/16)</strong><span>2 public and 2 private subnets across 2 availability zones</span></div></li>
+        <li><span class="sn" style="font-size:9px;">NAT</span><div class="sb"><strong>Single NAT Gateway</strong><span>Cost-optimised - saves about $65 per month vs multi-AZ setup</span></div></li>
+        <li><span class="sn" style="font-size:9px;">EKS</span><div class="sb"><strong>Managed EKS 1.31 Control Plane</strong><span>AWS manages master nodes, we manage only worker nodes</span></div></li>
+        <li><span class="sn" style="font-size:9px;">NG</span><div class="sb"><strong>Managed Node Group (2x t3.small)</strong><span>IMDSv2 enforced, EBS gp3 encrypted, Amazon Linux 2023</span></div></li>
+        <li><span class="sn" style="font-size:9px;">KMS</span><div class="sb"><strong>KMS Envelope Encryption</strong><span>Kubernetes Secrets encrypted at rest in etcd</span></div></li>
+      </ul>
+    </div>
+    <div>
+      <div class="cd">
+        <p style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:7px;">terraform apply output:</p>
+        <div class="cb" style="margin-top:0;font-size:11px;">
+<span class="co">cluster_name    = "campuspulse-eks"</span>
+<span class="co">cluster_version = "1.31"</span>
+<span class="co">cluster_status  = "ACTIVE"</span>
+<span class="co">vpc_id          = "vpc-06f423d041575e774"</span>
+<span class="co">region          = "ap-southeast-2"</span>
+
+<span class="cc">Apply complete! Resources: 53 added.</span>
+        </div>
+      </div>
+      <div class="cd" style="margin-top:10px;">
+        <p style="font-size:13px;color:rgba(255,255,255,.82);">Fully reproducible - anyone can redeploy the exact same infrastructure from the same code.</p>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<!-- SLIDE 11: LIVE CLUSTER -->
+<div class="slide sd" data-index="10">
+<div class="si">
+  <div class="lbl">Phase 8 - Live Deployment Evidence</div>
+  <div class="dv db"></div>
+  <h2>🟢 Live on AWS EKS - All 5 Pods Running</h2>
+  <div class="tc" style="margin-top:14px;">
+    <div>
+      <div class="cb">
+<span class="cm">$ kubectl get nodes</span>
+<span class="co">NAME                         STATUS   VERSION</span>
+<span class="co">ip-10-30-1-7.ap-se-2         Ready    v1.31.14</span>
+<span class="co">ip-10-30-2-30.ap-se-2        Ready    v1.31.14</span>
+
+<span class="cm">$ kubectl get pods -n campuspulse</span>
+<span class="co">campuspulse-backend-22dkn  1/1 Running  0</span>
+<span class="co">campuspulse-backend-q5xzl  1/1 Running  0</span>
+<span class="co">campuspulse-frontend-5b2n6 1/1 Running  0</span>
+<span class="co">campuspulse-frontend-c5kjw 1/1 Running  0</span>
+<span class="co">campuspulse-postgres-gfgcm 1/1 Running  0</span>
+      </div>
+    </div>
+    <div>
+      <div class="cb">
+<span class="cm"># In-cluster API verification</span>
+<span class="cc">$ curl localhost:8000/health</span>
+<span class="co">{"status":"healthy"}</span>
+
+<span class="cc">$ curl localhost:8000/ready</span>
+<span class="co">{"status":"ready","database":"connected"}</span>
+
+<span class="cc">$ curl localhost:8000/api/stats</span>
+<span class="co">{"total_events":6,"total_clubs":6,</span>
+<span class="co"> "average_capacity_utilization":38.9}</span>
+      </div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:9px;">
+        <span class="badge bg">2 Nodes Ready</span>
+        <span class="badge bg">5/5 Pods Running</span>
+        <span class="badge bg">0 Restarts</span>
+        <span class="badge bb">DB Connected</span>
+      </div>
+    </div>
+  </div>
+</div></div>
+<!-- SLIDE 12: OBSERVABILITY -->
+<div class="slide sm" data-index="11">
+<div class="si">
+  <div class="lbl">Phase 9 - Observability</div>
+  <div class="dv dw"></div>
+  <h2>📊 Prometheus and Grafana - Real-Time Monitoring</h2>
+  <div class="grid g3" style="margin-top:16px;">
+    <div class="cd"><div class="ci">📡</div><h3>Prometheus Scraping</h3><p>FastAPI exposes /metrics. Prometheus scrapes every 15s. Targets: UP (1/1).</p></div>
+    <div class="cd"><div class="ci">📈</div><h3>Grafana Dashboard</h3><p>Custom CampusPulse dashboard: HTTP throughput, error rate, p95 latency, DB connection pool.</p></div>
+    <div class="cd"><div class="ci">📋</div><h3>Metrics Tracked</h3><p>http_request_duration_seconds<br/>http_requests_total<br/>process_cpu_seconds_total</p></div>
+  </div>
+  <div class="sr">
+    <div class="s3"><div class="num">15s</div><div class="ll">Scrape Interval</div></div>
+    <div class="s3"><div class="num">&lt;5ms</div><div class="ll">Scrape Latency</div></div>
+    <div class="s3"><div class="num">1/1</div><div class="ll">Targets UP</div></div>
+    <div class="s3"><div class="num">6</div><div class="ll">Dashboard Panels</div></div>
+  </div>
+</div></div>
+
+<!-- SLIDE 13: GITOPS -->
+<div class="slide sh" data-index="12">
+<div class="si">
+  <div class="lbl">Phase 10 - GitOps</div>
+  <div class="dv" style="background:#7c3aed;"></div>
+  <h2>🔄 Argo CD - GitOps Continuous Delivery</h2>
+  <div class="tc" style="margin-top:16px;">
+    <div>
+      <p style="color:var(--mu);font-size:13px;margin-bottom:12px;">Argo CD watches Git. When Helm charts change, it <strong>automatically syncs</strong> the cluster to match. No manual kubectl needed.</p>
+      <ul class="cl">
+        <li><span class="chk">📁</span>Declarative application YAML in gitops/argocd-app.yaml</li>
+        <li><span class="chk">🔗</span>Points Argo CD at helm/campuspulse/ chart path</li>
+        <li><span class="chk">🔁</span>Auto-sync enabled - cluster self-heals drift</li>
+        <li><span class="chk">🔔</span>Manual cluster changes get automatically reverted</li>
+        <li><span class="chk">📦</span>Syncs to campuspulse namespace on AWS EKS</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:10px;">
+        <div class="ci">💡</div><h3>Why GitOps?</h3>
+        <p>Git is the single source of truth for what runs in production. Full audit trail. Zero config drift possible.</p>
+      </div>
+      <div class="card">
+        <div class="ci">🔐</div><h3>Access Control</h3>
+        <p>Only Argo CD modifies cluster state. Developers push to Git, not to Kubernetes directly. Eliminates a whole class of human errors.</p>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<!-- SLIDE 14: TEARDOWN -->
+<div class="slide se" data-index="13">
+<div class="si">
+  <div class="lbl">Phase 12 - Clean Teardown</div>
+  <div class="dv dg"></div>
+  <h2>🧹 Terraform Destroy - $0 Residual Cost</h2>
+  <div class="tc" style="margin-top:16px;">
+    <div>
+      <p style="color:var(--mu);font-size:13px;margin-bottom:12px;">After demonstration, all AWS resources destroyed cleanly. Zero orphaned VPCs, no dangling EIPs, no leftover EBS volumes.</p>
+      <div class="cb">
+<span class="cm">$ terraform destroy -auto-approve</span>
+<span class="co">Destroying... aws_eks_node_group</span>
+<span class="co">Destroying... aws_eks_cluster</span>
+<span class="co">Destroying... aws_nat_gateway</span>
+<span class="co">Destroying... aws_vpc</span>
+<span class="co">Destroying... aws_kms_key</span>
+<span class="cm">... 48 more resources ...</span>
+<span class="cc">Destroy complete! Resources: 53 destroyed.</span>
+      </div>
+    </div>
+    <div>
+      <div class="grid" style="margin-top:0;gap:10px;">
+        <div class="card"><div class="ci">✅</div><h3>EKS Cluster - Terminated</h3><p>Control plane and all worker nodes stopped. Zero compute charges.</p></div>
+        <div class="card"><div class="ci">✅</div><h3>NAT Gateway - Deleted</h3><p>Elastic IP released. No data processing or hourly NAT charges.</p></div>
+        <div class="card"><div class="ci">✅</div><h3>VPC and Subnets - Removed</h3><p>All networking cleaned. AWS state is completely pristine. Cost: $0.</p></div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<!-- SLIDE 15: CHECKLIST -->
+<div class="slide sk" data-index="14">
+<div class="si">
+  <div class="lbl">Submission</div>
+  <div class="dv db"></div>
+  <h2>📋 All 12 Phases Delivered</h2>
+  <div class="tc" style="margin-top:12px;">
+    <ul class="cl">
+      <li><span class="chk">✅</span>Phase 1 - FastAPI REST backend, full CRUD endpoints</li>
+      <li><span class="chk">✅</span>Phase 2 - 30/30 Pytest automated tests passing</li>
+      <li><span class="chk">✅</span>Phase 3 - Multi-stage non-root Docker containers</li>
+      <li><span class="chk">✅</span>Phase 4 - Docker Compose 3-tier stack healthy</li>
+      <li><span class="chk">✅</span>Phase 5 - GitHub Actions CI/CD green pipeline</li>
+      <li><span class="chk">✅</span>Phase 6 - Aqua Trivy vulnerability security gate</li>
+    </ul>
+    <ul class="cl">
+      <li><span class="chk">✅</span>Phase 7 - Modular Helm chart, lint and deploy clean</li>
+      <li><span class="chk">✅</span>Phase 8 - Argo CD GitOps declarative manifests</li>
+      <li><span class="chk">✅</span>Phase 9 - Prometheus and Grafana observability</li>
+      <li><span class="chk">✅</span>Phase 10 - Terraform AWS VPC and EKS IaC</li>
+      <li><span class="chk">✅</span>Phase 11 - Live cloud deployment verified on EKS</li>
+      <li><span class="chk">✅</span>Phase 12 - Clean destroy, 17 evidence screenshots</li>
+    </ul>
+  </div>
+  <div style="margin-top:14px;padding:13px 16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;">
+    <p style="color:#166534;font-size:13px;font-weight:500;">🎓 <strong>17 verification screenshots</strong> captured and linked in README.md - covering every grading milestone.</p>
+  </div>
+</div></div>
+
+<!-- SLIDE 16: CLOSE -->
+<div class="slide sf" data-index="15">
+<div class="si" style="text-align:center;">
+  <div style="font-size:56px;margin-bottom:16px;">🎓</div>
+  <h1 style="font-size:40px;">Thank You!</h1>
+  <p class="sub" style="margin:12px auto 24px;text-align:center;">CampusPulse proves that <strong>security, automation, and scalability</strong> are not optional extras. They are built into the delivery pipeline from day one.</p>
+  <div style="display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-bottom:24px;">
+    <span class="badge bb">Abhiroop</span>
+    <span class="badge bg">DevSecOps Capstone 2026</span>
+    <span class="badge bx">github.com/Abhiroop-011/CampusPulse_DevSecOps</span>
+  </div>
+  <div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;">
+    <div style="text-align:center;"><div style="font-size:28px;font-weight:800;">30</div><div style="font-size:11px;opacity:.7;">Tests Passing</div></div>
+    <div style="width:1px;background:rgba(255,255,255,.2);"></div>
+    <div style="text-align:center;"><div style="font-size:28px;font-weight:800;">53</div><div style="font-size:11px;opacity:.7;">AWS Resources IaC</div></div>
+    <div style="width:1px;background:rgba(255,255,255,.2);"></div>
+    <div style="text-align:center;"><div style="font-size:28px;font-weight:800;">12</div><div style="font-size:11px;opacity:.7;">DevSecOps Phases</div></div>
+    <div style="width:1px;background:rgba(255,255,255,.2);"></div>
+    <div style="text-align:center;"><div style="font-size:28px;font-weight:800;">17</div><div style="font-size:11px;opacity:.7;">Evidence Screenshots</div></div>
+    <div style="width:1px;background:rgba(255,255,255,.2);"></div>
+    <div style="text-align:center;"><div style="font-size:28px;font-weight:800;">$0</div><div style="font-size:11px;opacity:.7;">AWS Cost Remaining</div></div>
+  </div>
+</div></div>
+
+</div><!-- /ss -->
+<div class="ct" id="ct">Slide 1 / 16</div>
+<div class="hint">← → Arrow keys to navigate</div>
+<nav class="nav">
+  <button id="bp" onclick="ch(-1)" disabled>&#8592;</button>
+  <div class="dots" id="dots"></div>
+  <span class="nc" id="nc">1 / 16</span>
+  <button id="bn" onclick="ch(1)">&#8594;</button>
+</nav>
+<script>
+const slides=document.querySelectorAll('.slide'),total=slides.length;let cur=0;
+const de=document.getElementById('dots');
+slides.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' active':'');d.onclick=()=>gt(i);de.appendChild(d);});
+function gt(n){slides[cur].classList.remove('active');slides[cur].classList.add('exit');
+setTimeout(()=>slides[cur].classList.remove('exit'),450);cur=n;slides[cur].classList.add('active');
+document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+document.getElementById('nc').textContent=(cur+1)+' / '+total;
+document.getElementById('ct').textContent='Slide '+(cur+1)+' / '+total;
+document.getElementById('bp').disabled=cur===0;document.getElementById('bn').disabled=cur===total-1;}
+function ch(d){const n=cur+d;if(n>=0&&n<total)gt(n);}
+document.addEventListener('keydown',e=>{
+if(e.key==='ArrowRight'||e.key==='ArrowDown')ch(1);
+if(e.key==='ArrowLeft'||e.key==='ArrowUp')ch(-1);
+if(e.key==='Home')gt(0);if(e.key==='End')gt(total-1);});
+</script>
+</body></html>
+
+
+
