@@ -54,7 +54,7 @@
 | 4 | `test(api): add comprehensive test suite for events and registration logic` | ✅ Done |
 | 5 | `feat(frontend): build responsive brown-themed campuspulse dashboard` | ✅ Done |
 | 6 | `build(docker): containerize stack with non-root images and docker compose` | ✅ Done |
-| 7 | `ci(pipeline): add test, trivy security scan, and ghcr publishing workflow` | ⬜ Phase 6 |
+| 7 | `ci(pipeline): add test, trivy security scan, and ghcr publishing workflow` | ✅ Done |
 | 8 | `docs(security): document trivy vulnerability scan findings and triage` | ⬜ Phase 6 |
 | 9 | `feat(k8s): implement modular helm chart with ingress and replica scaling` | ⬜ Phase 7 |
 | 10 | `feat(gitops): configure declarative argo cd application and sync policy` | ⬜ Phase 8 |
