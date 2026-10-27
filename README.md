@@ -1,6 +1,8 @@
 # CampusPulse — DevSecOps Capstone Project
 
-> **Name:** Abhiroop Sistu &nbsp;|&nbsp; **Roll No:** 10287 &nbsp;|&nbsp; **Batch:** A
+> **Name:** Abhiroop Sistu &nbsp;|&nbsp; **Roll No:** 10287 &nbsp;|&nbsp; **Batch:** A  
+> 🎥 **Presentation Video:** [CampusPulse Walkthrough (MP4 Download)](https://github.com/Abhiroop-011/CampusPulse_DevSecOps/releases/download/v1.0.0/Screen.Recording.2026-10-27.182346.mp4) &nbsp;|&nbsp; [GitHub Release v1.0.0](https://github.com/Abhiroop-011/CampusPulse_DevSecOps/releases/tag/v1.0.0)  
+> 📊 **Presentation Slides:** [demo/campuspulse-presentation.html](demo/campuspulse-presentation.html)
 
 [![CI/CD Pipeline](https://github.com/Abhiroop-011/CampusPulse_DevSecOps/actions/workflows/ci.yml/badge.svg)](https://github.com/Abhiroop-011/CampusPulse_DevSecOps/actions/workflows/ci.yml)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
@@ -344,4 +346,6 @@ All 17 required grading milestones have been executed, validated, and archived i
 - [x] Production AWS VPC & EKS Terraform infrastructure validated
 - [x] Complete technical documentation and evidence guides
 - [x] All 17 verification evidence screenshots captured, verified, and linked in `README.md`
+- [x] Mandatory presentation video recorded and published: [Release v1.0.0 Asset](https://github.com/Abhiroop-011/CampusPulse_DevSecOps/releases/tag/v1.0.0)
+- [x] Mandatory presentation slide deck committed: [demo/campuspulse-presentation.html](demo/campuspulse-presentation.html)
 
